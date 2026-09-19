@@ -1,0 +1,17 @@
+[
+  {
+    "project_id": "PRJ-001",
+    "project_code": "ALPHA",
+    "project_name": "Alpha Heights",
+    "modules_active": [
+      "POD",
+      "MEP"
+    ],
+    "modules_planned_future": [
+      "FACADE",
+      "JOINERY"
+    ],
+    "created_date": "2025-12-01",
+    "site_manager": "Rohit Sharma"
+  }
+]

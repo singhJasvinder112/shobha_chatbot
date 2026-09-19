@@ -1,0 +1,130 @@
+[
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 1,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G2"
+  },
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 2,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G2"
+  },
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 3,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G2"
+  },
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 4,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G2"
+  },
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 5,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G2"
+  },
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 6,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G1"
+  },
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 7,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G1"
+  },
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 8,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G1"
+  },
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 9,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G1"
+  },
+  {
+    "tower_id": "TWR-A",
+    "floor_number": 10,
+    "port_count": 4,
+    "floor_duration_days": 6,
+    "is_sandwich_floor": true,
+    "sandwich_group": "G1"
+  },
+  {
+    "tower_id": "TWR-B",
+    "floor_number": 1,
+    "port_count": 4,
+    "floor_duration_days": 5,
+    "is_sandwich_floor": false,
+    "sandwich_group": null
+  },
+  {
+    "tower_id": "TWR-B",
+    "floor_number": 2,
+    "port_count": 4,
+    "floor_duration_days": 5,
+    "is_sandwich_floor": false,
+    "sandwich_group": null
+  },
+  {
+    "tower_id": "TWR-B",
+    "floor_number": 3,
+    "port_count": 4,
+    "floor_duration_days": 5,
+    "is_sandwich_floor": false,
+    "sandwich_group": null
+  },
+  {
+    "tower_id": "TWR-B",
+    "floor_number": 4,
+    "port_count": 4,
+    "floor_duration_days": 5,
+    "is_sandwich_floor": false,
+    "sandwich_group": null
+  },
+  {
+    "tower_id": "TWR-B",
+    "floor_number": 5,
+    "port_count": 4,
+    "floor_duration_days": 5,
+    "is_sandwich_floor": false,
+    "sandwich_group": null
+  },
+  {
+    "tower_id": "TWR-B",
+    "floor_number": 6,
+    "port_count": 4,
+    "floor_duration_days": 5,
+    "is_sandwich_floor": false,
+    "sandwich_group": null
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "tower_id": "TWR-A",
+    "floors_to_consider_together": 4,
+    "lag_between_groups_days": 1,
+    "first_group_duration_days": 21,
+    "subsequent_group_duration_days": 4,
+    "installation_sequencing": "port_wise"
+  },
+  {
+    "tower_id": "TWR-B",
+    "floors_to_consider_together": 3,
+    "lag_between_groups_days": 1,
+    "first_group_duration_days": 18,
+    "subsequent_group_duration_days": 3,
+    "installation_sequencing": "floor_wise"
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "module_type": "POD",
+    "stage_sequence": 1,
+    "stage_name": "Component Cutting",
+    "duration_days": 3
+  },
+  {
+    "module_type": "POD",
+    "stage_sequence": 2,
+    "stage_name": "Assembly",
+    "duration_days": 4
+  },
+  {
+    "module_type": "POD",
+    "stage_sequence": 3,
+    "stage_name": "Finishing",
+    "duration_days": 2
+  },
+  {
+    "module_type": "POD",
+    "stage_sequence": 4,
+    "stage_name": "Quality Check",
+    "duration_days": 1
+  },
+  {
+    "module_type": "POD",
+    "stage_sequence": 5,
+    "stage_name": "Dispatch",
+    "duration_days": 1
+  },
+  {
+    "module_type": "HCM",
+    "stage_sequence": 1,
+    "stage_name": "Frame Fabrication",
+    "duration_days": 3
+  },
+  {
+    "module_type": "HCM",
+    "stage_sequence": 2,
+    "stage_name": "Panel Fitting",
+    "duration_days": 3
+  },
+  {
+    "module_type": "HCM",
+    "stage_sequence": 3,
+    "stage_name": "Quality Check",
+    "duration_days": 1
+  },
+  {
+    "module_type": "HCM",
+    "stage_sequence": 4,
+    "stage_name": "Dispatch",
+    "duration_days": 1
+  },
+  {
+    "module_type": "PFM",
+    "stage_sequence": 1,
+    "stage_name": "Plumbing Assembly",
+    "duration_days": 2
+  },
+  {
+    "module_type": "PFM",
+    "stage_sequence": 2,
+    "stage_name": "Quality Check",
+    "duration_days": 1
+  },
+  {
+    "module_type": "PFM",
+    "stage_sequence": 3,
+    "stage_name": "Dispatch",
+    "duration_days": 1
+  },
+  {
+    "module_type": "KFM",
+    "stage_sequence": 1,
+    "stage_name": "Kitchen Module Assembly",
+    "duration_days": 3
+  },
+  {
+    "module_type": "KFM",
+    "stage_sequence": 2,
+    "stage_name": "Quality Check",
+    "duration_days": 1
+  },
+  {
+    "module_type": "KFM",
+    "stage_sequence": 3,
+    "stage_name": "Dispatch",
+    "duration_days": 1
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "tower_id": "TWR-A",
+    "project_id": "PRJ-001",
+    "tower_name": "Tower A",
+    "total_floors": 10,
+    "floor_start_date": "2026-07-13",
+    "floor_duration_days": 6,
+    "demand_planning": "top_to_bottom",
+    "sandwich_group_size": 5,
+    "num_platforms": 3
+  },
+  {
+    "tower_id": "TWR-B",
+    "project_id": "PRJ-001",
+    "tower_name": "Tower B",
+    "total_floors": 6,
+    "floor_start_date": "2026-07-20",
+    "floor_duration_days": 5,
+    "demand_planning": "bottom_to_top",
+    "sandwich_group_size": null,
+    "num_platforms": 2
+  }
+]

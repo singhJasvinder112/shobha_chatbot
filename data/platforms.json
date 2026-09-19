@@ -1,0 +1,37 @@
+[
+  {
+    "platform_id": "TWR-A-PLAT-1",
+    "tower_id": "TWR-A",
+    "platform_name": "Platform 1",
+    "capacity_per_day": 4,
+    "platform_priority": 1
+  },
+  {
+    "platform_id": "TWR-A-PLAT-2",
+    "tower_id": "TWR-A",
+    "platform_name": "Platform 2",
+    "capacity_per_day": 4,
+    "platform_priority": 2
+  },
+  {
+    "platform_id": "TWR-A-PLAT-3",
+    "tower_id": "TWR-A",
+    "platform_name": "Platform 3",
+    "capacity_per_day": 4,
+    "platform_priority": 3
+  },
+  {
+    "platform_id": "TWR-B-PLAT-1",
+    "tower_id": "TWR-B",
+    "platform_name": "Platform 1",
+    "capacity_per_day": 4,
+    "platform_priority": 1
+  },
+  {
+    "platform_id": "TWR-B-PLAT-2",
+    "tower_id": "TWR-B",
+    "platform_name": "Platform 2",
+    "capacity_per_day": 4,
+    "platform_priority": 2
+  }
+]
