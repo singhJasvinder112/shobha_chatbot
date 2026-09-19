@@ -13,6 +13,15 @@ function deriveTitle(messages: UIMessage[]): string {
   return text.length > 60 ? `${text.slice(0, 60)}…` : text;
 }
 
+export async function ensureTitle(sessionId: string, messages: UIMessage[]): Promise<void> {
+  const { error } = await getSupabase()
+    .from('chat_sessions')
+    .update({ title: deriveTitle(messages), updated_at: new Date().toISOString() })
+    .eq('id', sessionId)
+    .is('title', null);
+  if (error) throw error;
+}
+
 export async function createSession(id: string): Promise<void> {
   const { error } = await getSupabase().from('chat_sessions').insert({ id, title: null });
   if (error) throw error;
@@ -88,12 +97,9 @@ export async function saveChat({
   );
   if (messagesError) throw messagesError;
 
-  const { error: sessionError } = await supabase
-    .from('chat_sessions')
-    .update({ title: deriveTitle(messages), updated_at: new Date().toISOString() })
-    .eq('id', sessionId)
-    .is('title', null);
-  if (sessionError) throw sessionError;
+  // Normally already set by ensureTitle() at the start of the request, before the assistant
+  // even started responding - this is just a safety net in case that early call didn't fire.
+  await ensureTitle(sessionId, messages);
 
   // Keep updated_at fresh even once the title is already set.
   await supabase

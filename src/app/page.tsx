@@ -7,10 +7,19 @@ import { HistoryPanel } from '@/components/HistoryPanel';
 
 const SESSION_STORAGE_KEY = 'alpha-heights-session-id';
 
+async function createSessionOrThrow(): Promise<string> {
+  const res = await fetch('/api/sessions', { method: 'POST' });
+  if (!res.ok) throw new Error(`Failed to create a chat session (${res.status})`);
+  const data: { id: string } = await res.json();
+  if (!data.id) throw new Error('Server did not return a session id');
+  return data.id;
+}
+
 export default function Page() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [initialMessages, setInitialMessages] = useState<UIMessage[]>([]);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [sessionError, setSessionError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,18 +37,20 @@ export default function Page() {
             }
             return;
           }
+          // storedId is stale (deleted, or never existed) - fall through and create a fresh one.
         }
-        const res = await fetch('/api/sessions', { method: 'POST' });
-        const data: { id: string } = await res.json();
+        const id = await createSessionOrThrow();
         if (!cancelled) {
-          localStorage.setItem(SESSION_STORAGE_KEY, data.id);
-          setSessionId(data.id);
+          localStorage.setItem(SESSION_STORAGE_KEY, id);
+          setSessionId(id);
           setInitialMessages([]);
         }
-      } catch {
+      } catch (err) {
+        // Never fall back to a client-only id: it was never inserted server-side, so the
+        // chat would silently fail to save with no indication to the user. Surface the
+        // failure instead so a refresh (or the retry button) is the obvious next step.
         if (!cancelled) {
-          setSessionId(crypto.randomUUID());
-          setInitialMessages([]);
+          setSessionError(err instanceof Error ? err.message : 'Could not start a chat session.');
         }
       }
     }
@@ -53,24 +64,29 @@ export default function Page() {
   async function startNewChat() {
     setHistoryOpen(false);
     try {
-      const res = await fetch('/api/sessions', { method: 'POST' });
-      const data: { id: string } = await res.json();
-      localStorage.setItem(SESSION_STORAGE_KEY, data.id);
-      setSessionId(data.id);
+      const id = await createSessionOrThrow();
+      localStorage.setItem(SESSION_STORAGE_KEY, id);
+      setSessionId(id);
       setInitialMessages([]);
-    } catch {
-      setSessionId(crypto.randomUUID());
-      setInitialMessages([]);
+      setSessionError(null);
+    } catch (err) {
+      setSessionError(err instanceof Error ? err.message : 'Could not start a new chat.');
     }
   }
 
   async function selectSession(id: string) {
     try {
       const res = await fetch(`/api/sessions/${id}`);
+      if (!res.ok) throw new Error('That chat could not be found - it may have been deleted.');
       const data: { messages: UIMessage[] } = await res.json();
       localStorage.setItem(SESSION_STORAGE_KEY, id);
       setSessionId(id);
       setInitialMessages(data.messages);
+      setSessionError(null);
+    } catch (err) {
+      // sessionId may still point at a valid, currently-open chat, so don't blow away the
+      // whole view for a failed switch - just tell the user directly.
+      window.alert(err instanceof Error ? err.message : 'Could not open that chat.');
     } finally {
       setHistoryOpen(false);
     }
@@ -114,6 +130,17 @@ export default function Page() {
 
       {sessionId ? (
         <ChatView key={sessionId} sessionId={sessionId} initialMessages={initialMessages} />
+      ) : sessionError ? (
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
+          <p className="text-sm text-muted">{sessionError}</p>
+          <button
+            type="button"
+            onClick={() => void startNewChat()}
+            className="rounded-full bg-gradient-to-br from-primary-500 to-primary-600 px-4 py-2 text-sm font-medium text-white shadow-md shadow-primary-500/30"
+          >
+            Try again
+          </button>
+        </div>
       ) : (
         <div className="flex flex-1 items-center justify-center text-sm text-muted">Loading…</div>
       )}

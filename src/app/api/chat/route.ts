@@ -9,7 +9,7 @@ import {
   UIMessage,
 } from 'ai';
 import { tools } from '@/lib/tools';
-import { saveChat } from '@/lib/chat-store';
+import { ensureTitle, saveChat } from '@/lib/chat-store';
 import { isSupabaseConfigured } from '@/lib/supabase';
 
 export const maxDuration = 30;
@@ -38,6 +38,15 @@ Users often ask compound questions with several parts in one sentence (e.g. "how
 
 export async function POST(req: Request) {
   const { id, messages }: { id?: string; messages: UIMessage[] } = await req.json();
+
+  // Set the session title from the user's message immediately, without waiting for the
+  // assistant to finish responding (which can take several seconds with tool calls) - so
+  // the history panel shows the real title right away instead of "New chat" until then.
+  if (id && isSupabaseConfigured()) {
+    ensureTitle(id, messages).catch(err =>
+      console.error('Failed to set chat title:', err?.message ?? err, err?.details ?? '', err?.hint ?? ''),
+    );
+  }
 
   const result = streamText({
     model: openai('gpt-4o'),
