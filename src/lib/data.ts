@@ -46,4 +46,13 @@ export function daysBetween(a: string, b: string): number {
   return Math.round((new Date(b).getTime() - new Date(a).getTime()) / msPerDay);
 }
 
+// Holidays strictly after `startExclusive` and up to `endInclusive` (ISO YYYY-MM-DD strings compare
+// correctly with plain string operators). These are the calendar days that get skipped when counting
+// working days forward from a start date, so a finish date can land later than naive start+duration math.
+export function holidaysBetween(startExclusive: string, endInclusive: string) {
+  return db.holidays
+    .filter(h => h.holiday_date > startExclusive && h.holiday_date <= endInclusive)
+    .map(h => ({ date: h.holiday_date, description: h.description }));
+}
+
 export const TODAY = '2026-09-19';
