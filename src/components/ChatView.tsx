@@ -14,7 +14,7 @@ const SUGGESTIONS = [
 ];
 
 export function ChatView({ sessionId, initialMessages }: { sessionId: string; initialMessages: UIMessage[] }) {
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, regenerate, clearError } = useChat({
     id: sessionId,
     messages: initialMessages,
     transport: new DefaultChatTransport({ api: '/api/chat' }),
@@ -99,6 +99,27 @@ export function ChatView({ sessionId, initialMessages }: { sessionId: string; in
               <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary-400 [animation-delay:-0.3s]" />
               <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary-400 [animation-delay:-0.15s]" />
               <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary-400" />
+            </div>
+          </div>
+        )}
+
+        {status === 'error' && (
+          <div className="flex justify-start">
+            <div className="max-w-[85%] rounded-2xl rounded-bl-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300">
+              <p className="font-medium">Something went wrong answering that.</p>
+              <p className="mt-0.5 text-xs text-red-600/80 dark:text-red-400/80">
+                The assistant might be temporarily unavailable. Please try again in a moment.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  clearError();
+                  regenerate();
+                }}
+                className="mt-2 rounded-full bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700"
+              >
+                Try again
+              </button>
             </div>
           </div>
         )}

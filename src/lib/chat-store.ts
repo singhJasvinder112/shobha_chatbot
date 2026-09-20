@@ -13,17 +13,24 @@ function deriveTitle(messages: UIMessage[]): string {
   return text.length > 60 ? `${text.slice(0, 60)}…` : text;
 }
 
+// Creates the session row on first use and sets its title from the first user message - all
+// in one call. Sessions are created lazily, exactly when a message is actually sent, rather
+// than eagerly when the chat UI loads: eager creation left an empty row behind every time the
+// widget mounted without the user ever sending anything (page reloads, dev hot-reloads, a
+// stale localStorage id that couldn't resume, etc.), cluttering history with "New chat" rows.
 export async function ensureTitle(sessionId: string, messages: UIMessage[]): Promise<void> {
-  const { error } = await getSupabase()
+  const supabase = getSupabase();
+
+  const { error: upsertError } = await supabase
+    .from('chat_sessions')
+    .upsert({ id: sessionId, title: null }, { onConflict: 'id', ignoreDuplicates: true });
+  if (upsertError) throw upsertError;
+
+  const { error } = await supabase
     .from('chat_sessions')
     .update({ title: deriveTitle(messages), updated_at: new Date().toISOString() })
     .eq('id', sessionId)
     .is('title', null);
-  if (error) throw error;
-}
-
-export async function createSession(id: string): Promise<void> {
-  const { error } = await getSupabase().from('chat_sessions').insert({ id, title: null });
   if (error) throw error;
 }
 
