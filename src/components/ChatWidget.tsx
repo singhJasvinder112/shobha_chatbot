@@ -171,11 +171,13 @@ export function ChatWidget() {
       {/* Greeting bubble, shown briefly during the entrance intro on every load. */}
       {(introPhase === 'greeting' || introPhase === 'greeting-out') && (
         <div
-          className={`fixed right-8 bottom-31 z-50 max-w-64 rounded-2xl rounded-br-md border border-border bg-surface px-5 py-3.5 text-base font-medium text-foreground shadow-2xl sm:right-16 sm:bottom-33 ${
+          className={`fixed right-8 bottom-31 z-50 max-w-64 rounded-2xl border border-border bg-surface px-5 py-3.5 text-base font-medium text-foreground shadow-2xl sm:right-16 sm:bottom-33 ${
             introPhase === 'greeting' ? 'animate-greeting-in' : 'animate-greeting-out'
           }`}
         >
-          Hey, Maya this side 👋
+          Hey, Maya this side <span className="animate-widget-wave">👋</span>
+          {/* Speech-bubble tail, pointing down toward the launcher button. */}
+          <span className="absolute -bottom-1.5 right-8 h-3 w-3 rotate-45 border-r border-b border-border bg-surface" />
         </div>
       )}
 
