@@ -7,11 +7,34 @@ import { HistoryPanel } from '@/components/HistoryPanel';
 
 const SESSION_STORAGE_KEY = 'alpha-heights-session-id';
 
+type IntroPhase = 'pending' | 'entering' | 'greeting' | 'greeting-out' | 'done';
+
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [initialMessages, setInitialMessages] = useState<UIMessage[]>([]);
   const [historyOpen, setHistoryOpen] = useState(false);
+  // Starts invisible on every render (server and first client paint alike, so there's no
+  // hydration mismatch) - the effect below plays the pop-in + greeting sequence on every
+  // load (by design: this is a marketing-style entrance meant to catch the eye every time,
+  // not a one-time onboarding hint), unless the user has reduced motion enabled.
+  const [introPhase, setIntroPhase] = useState<IntroPhase>('pending');
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Scheduling every transition (even the immediate skip-case) through a timer, rather than
+    // calling setState synchronously in the effect body, keeps this a single consistent pattern.
+    const timers = reduceMotion
+      ? [setTimeout(() => setIntroPhase('done'), 0)]
+      : [
+          setTimeout(() => setIntroPhase('entering'), 150),
+          setTimeout(() => setIntroPhase('greeting'), 750),
+          setTimeout(() => setIntroPhase('greeting-out'), 1900),
+          setTimeout(() => setIntroPhase('done'), 2250),
+        ];
+    return () => timers.forEach(clearTimeout);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -89,7 +112,7 @@ export function ChatWidget() {
         role="dialog"
         aria-label="Alpha Heights Site Assistant"
         aria-hidden={!isOpen}
-        className={`fixed right-4 bottom-20 z-50 flex h-[min(640px,calc(100dvh-6rem))] w-[min(400px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl transition-all duration-200 ease-out sm:right-6 ${
+        className={`fixed right-8 bottom-30 z-50 flex h-[min(640px,calc(100dvh-7rem))] w-[min(420px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl transition-all duration-200 ease-out sm:right-16 sm:bottom-32 ${
           isOpen ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'
         }`}
       >
@@ -145,16 +168,41 @@ export function ChatWidget() {
         />
       </div>
 
+      {/* Greeting bubble, shown briefly during the entrance intro on every load. */}
+      {(introPhase === 'greeting' || introPhase === 'greeting-out') && (
+        <div
+          className={`fixed right-8 bottom-31 z-50 max-w-64 rounded-2xl rounded-br-md border border-border bg-surface px-5 py-3.5 text-base font-medium text-foreground shadow-2xl sm:right-16 sm:bottom-33 ${
+            introPhase === 'greeting' ? 'animate-greeting-in' : 'animate-greeting-out'
+          }`}
+        >
+          Hey, Maya this side 👋
+        </div>
+      )}
+
       {/* Launcher button - always visible, fixed bottom-right. */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(prev => !prev)}
-        aria-label={isOpen ? 'Close Alpha Heights Assistant' : 'Open Alpha Heights Assistant'}
-        title={isOpen ? 'Close chat' : 'Chat with Alpha Heights Assistant'}
-        className="fixed right-4 bottom-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/40 transition-transform hover:scale-105 sm:right-6 sm:bottom-6"
-      >
-        {isOpen ? <CloseIcon large /> : <ChatBubbleIcon />}
-      </button>
+      <div className="fixed right-8 bottom-8 z-50 sm:right-16 sm:bottom-10">
+        {/* Attention-pulse rings, looping continuously behind the button until it's opened. */}
+        {!isOpen && introPhase !== 'pending' && (
+          <>
+            <span className="pointer-events-none absolute inset-0 animate-widget-ring rounded-full bg-primary-500" />
+            <span className="pointer-events-none absolute inset-0 animate-widget-ring rounded-full bg-primary-500 [animation-delay:1s]" />
+          </>
+        )}
+        <button
+          type="button"
+          onClick={() => {
+            setIsOpen(prev => !prev);
+            setIntroPhase('done');
+          }}
+          aria-label={isOpen ? 'Close Alpha Heights Assistant' : 'Open Alpha Heights Assistant'}
+          title={isOpen ? 'Close chat' : 'Chat with Alpha Heights Assistant'}
+          className={`relative flex h-20 w-20 origin-bottom-right items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-xl shadow-primary-500/50 transition-transform hover:scale-105 ${
+            introPhase === 'pending' ? 'pointer-events-none scale-50 opacity-0' : ''
+          } ${introPhase === 'entering' ? 'animate-widget-pop' : ''}`}
+        >
+          {isOpen ? <CloseIcon large /> : <ChatBubbleIcon />}
+        </button>
+      </div>
     </>
   );
 }
@@ -190,7 +238,7 @@ function PlusIcon() {
 
 function CloseIcon({ large }: { large?: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={large ? 'h-6 w-6' : 'h-4 w-4'} stroke="currentColor" strokeWidth={2}>
+    <svg viewBox="0 0 24 24" fill="none" className={large ? 'h-8 w-8' : 'h-4 w-4'} stroke="currentColor" strokeWidth={2}>
       <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -198,7 +246,7 @@ function CloseIcon({ large }: { large?: boolean }) {
 
 function ChatBubbleIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" stroke="currentColor" strokeWidth={2}>
+    <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8" stroke="currentColor" strokeWidth={2}>
       <path
         d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"
         strokeLinecap="round"
