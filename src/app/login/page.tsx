@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ChatWidget } from '@/components/ChatWidget';
 import { markAuthed } from '@/lib/auth';
 
 export default function LoginPage() {
@@ -129,13 +128,10 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-xs text-gray-400">
-            This is a demo environment — any credentials will sign you in. Have a question in the
-            meantime? Try the assistant in the bottom-right corner.
+            This is a demo environment — any credentials will sign you in.
           </p>
         </div>
       </div>
-
-      <ChatWidget />
     </div>
   );
 }
